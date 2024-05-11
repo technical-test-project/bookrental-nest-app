@@ -9,7 +9,7 @@ import { Response } from 'express';
 export class BookController {
   constructor(private readonly booksService: BookService) {}
 
-  @ApiOkResponse({ description: 'Retrieve all books' })
+  @ApiOkResponse({ description: 'Retrieve all books with stock > 0' })
   @Get()
   async findAll(@Res() response: Response): Promise<Response<Book[]>> {
     return response.status(HttpStatus.OK).json({

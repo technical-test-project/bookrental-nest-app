@@ -7,6 +7,10 @@ export class MemberService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findAll(): Promise<Member[]> {
-    return this.prismaService.member.findMany();
+    return this.prismaService.member.findMany({
+      include: {
+        bookRentals: true,
+      },
+    });
   }
 }

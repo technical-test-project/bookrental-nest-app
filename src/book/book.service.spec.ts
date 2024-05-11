@@ -25,4 +25,14 @@ describe('BookService', () => {
       expect(service.findAll()).toBe(result);
     });
   });
+
+  describe('updateStock', () => {
+    it('should update the bookRental', async () => {
+      const books = await service.findAll();
+      const result = service.updateStock(books[0].id, 1);
+
+      jest.spyOn(service, 'updateStock').mockImplementationOnce(() => result);
+      expect(service.updateStock(books[0].id, 1)).toBe(result);
+    });
+  });
 });

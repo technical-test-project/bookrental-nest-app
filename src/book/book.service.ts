@@ -15,4 +15,15 @@ export class BookService {
       },
     });
   }
+
+  async updateStock(bookId: string, stock: number): Promise<Book> {
+    return this.prismaService.book.update({
+      where: {
+        id: bookId,
+      },
+      data: {
+        stock,
+      },
+    });
+  }
 }

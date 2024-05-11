@@ -34,18 +34,18 @@ model Member {
 
 model BookRental {
   id         String   @id @default(cuid())
-  memberId   String
-  bookId     String?
+  memberCode String
+  bookCode   String
   rentalDate DateTime
   dueDate    DateTime
-  member     Member?  @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  book       Book?    @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  member     Member?  @relation(fields: [memberCode], references: [code], onDelete: Cascade)
+  book       Book?    @relation(fields: [bookCode], references: [code], onDelete: Cascade)
 }
 
 model Penalty {
   id               String   @id @default(cuid())
-  memberId         String
+  memberCode       String
   penaltyDateUntil DateTime
 
-  member Member? @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  member Member? @relation(fields: [memberCode], references: [code], onDelete: Cascade)
 }
