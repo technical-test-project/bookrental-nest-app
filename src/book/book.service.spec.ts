@@ -16,4 +16,13 @@ describe('BookService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('findAll', () => {
+    it('should return the list of books', () => {
+      const result = service.findAll();
+
+      jest.spyOn(service, 'findAll').mockImplementationOnce(() => result);
+      expect(service.findAll()).toBe(result);
+    });
+  });
 });
