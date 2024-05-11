@@ -25,7 +25,7 @@ CREATE TABLE `BookRental` (
     `id` VARCHAR(191) NOT NULL,
     `memberId` VARCHAR(191) NOT NULL,
     `bookId` VARCHAR(191) NULL,
-    `loadDate` DATETIME(3) NOT NULL,
+    `rentalDate` DATETIME(3) NOT NULL,
     `dueDate` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
