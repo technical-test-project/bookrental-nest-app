@@ -4,14 +4,10 @@ import { BookRental } from '@prisma/client';
 import { CreateBookRentalDto } from './dto/create-book-rental.dto';
 import { Penalty } from '../penalty/penalty.model';
 import { ReturnBookRentalDto } from './dto/return-book-rental.dto';
-import { BookService } from '../book/book.service';
 
 @Injectable()
 export class BookRentalService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly bookService: BookService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async findAll(): Promise<BookRental[]> {
     return this.prismaService.bookRental.findMany();
@@ -57,7 +53,14 @@ export class BookRentalService {
           },
         });
 
-        await this.bookService.updateStock(createBookRentalDto.bookCode, 0);
+        await prisma.book.update({
+          where: {
+            code: createBookRentalDto.bookCode,
+          },
+          data: {
+            stock: 0,
+          },
+        });
 
         return bookRental;
       } catch (error) {
@@ -120,7 +123,14 @@ export class BookRentalService {
           },
         });
 
-        await this.bookService.updateStock(returnBookRentalDto.bookCode, 1);
+        await prisma.book.update({
+          where: {
+            code: returnBookRentalDto.bookCode,
+          },
+          data: {
+            stock: 1,
+          },
+        });
 
         return true;
       } catch (error) {
