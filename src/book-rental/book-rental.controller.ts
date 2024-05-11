@@ -9,6 +9,7 @@ import {
 import { Response } from 'express';
 import { BookRental } from './book-rental.model';
 import { CreateBookRentalDto } from './dto/create-book-rental.dto';
+import { ReturnBookRentalDto } from './dto/return-book-rental.dto';
 
 @ApiTags('BookRentals')
 @Controller('book-rentals')
@@ -32,7 +33,7 @@ export class BookRentalController {
   async storeBookRental(
     @Body() createBookRentalDto: CreateBookRentalDto,
     @Res() response: Response,
-  ): Promise<Response<BookRental>> {
+  ): Promise<Response> {
     const days: number = 7;
     const rentalDate = new Date();
     const dueDate = new Date(new Date().getTime() + days * 24 * 60 * 60 * 1000);
@@ -51,6 +52,31 @@ export class BookRentalController {
     return response.status(HttpStatus.CREATED).json({
       message: 'Successfully stored book rental',
       data: result,
+    });
+  }
+
+  @ApiCreatedResponse({ description: 'Return book rental' })
+  @ApiUnprocessableEntityResponse({
+    description: 'Book rental not found',
+  })
+  @ApiUnprocessableEntityResponse({
+    description: 'Member return book more than 7 days',
+  })
+  @Post('/return')
+  async returnBookRental(
+    @Body() returnBookRentalDto: ReturnBookRentalDto,
+    @Res() response: Response,
+  ): Promise<Response> {
+    const result =
+      await this.bookRentalService.returnBookRental(returnBookRentalDto);
+    if (!result.status) {
+      return response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
+        message: result.message,
+      });
+    }
+
+    return response.status(HttpStatus.CREATED).json({
+      message: 'Successfully return book rental',
     });
   }
 }

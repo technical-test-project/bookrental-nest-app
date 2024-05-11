@@ -30,6 +30,9 @@ export class BookRentalService {
       await this.prismaService.penalty.findFirst({
         where: {
           memberCode: createBookRentalDto.memberCode,
+          penaltyDateUntil: {
+            lte: new Date(),
+          },
         },
       });
 
@@ -66,7 +69,7 @@ export class BookRentalService {
 
   async returnBookRental(
     returnBookRentalDto: ReturnBookRentalDto,
-  ): Promise<boolean> {
+  ): Promise<{ message: string; status: boolean }> {
     const bookRental: BookRental =
       await this.prismaService.bookRental.findFirst({
         where: {
@@ -75,7 +78,10 @@ export class BookRentalService {
       });
 
     if (!bookRental) {
-      return false;
+      return {
+        message: 'Book rental not found',
+        status: false,
+      };
     }
 
     const today = new Date();
@@ -90,10 +96,22 @@ export class BookRentalService {
       });
 
     if (!bookRentalLowerThanEqualToday) {
-      return false;
+      // Penalty For 3 Days
+      await this.prismaService.penalty.create({
+        data: {
+          memberCode: returnBookRentalDto.memberCode,
+          penaltyDateUntil: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000),
+        },
+      });
+
+      return {
+        message:
+          'Member return book more than 7 days, the member will be subject to a penalty',
+        status: false,
+      };
     }
 
-    return this.prismaService.$transaction(async (prisma) => {
+    const result = await this.prismaService.$transaction(async (prisma) => {
       try {
         await prisma.bookRental.deleteMany({
           where: {
@@ -110,5 +128,10 @@ export class BookRentalService {
         throw new Error(`Transaction failed: ${error}`);
       }
     });
+
+    return {
+      message: 'Successfully return book rental',
+      status: result,
+    };
   }
 }
