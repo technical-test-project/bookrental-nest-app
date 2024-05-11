@@ -4,6 +4,6 @@ import { PenaltyService } from './penalty.service';
 
 @Module({
   controllers: [PenaltyController],
-  providers: [PenaltyService]
+  providers: [PenaltyService],
 })
 export class PenaltyModule {}

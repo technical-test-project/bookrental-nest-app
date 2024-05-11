@@ -7,6 +7,12 @@ export class BookService {
   constructor(private prismaService: PrismaService) {}
 
   async findAll(): Promise<Book[]> {
-    return this.prismaService.book.findMany();
+    return this.prismaService.book.findMany({
+      where: {
+        stock: {
+          not: 0,
+        },
+      },
+    });
   }
 }

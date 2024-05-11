@@ -8,8 +8,6 @@ describe('BookController', () => {
   let controller: BookController;
   let service: BookService;
 
-  // const requestMock = {};
-
   const statusResponseMock = {
     json: jest.fn((x) => x),
   };
