@@ -17,6 +17,16 @@ export class BookService {
   }
 
   async updateStock(bookId: string, stock: number): Promise<Book> {
+    const book = await this.prismaService.book.findFirst({
+      where: {
+        id: bookId,
+      },
+    });
+
+    if (!book) {
+      return;
+    }
+
     return this.prismaService.book.update({
       where: {
         id: bookId,

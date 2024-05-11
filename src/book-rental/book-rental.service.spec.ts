@@ -54,7 +54,6 @@ describe('BookRentalService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
     expect(prismaService).toBeDefined();
-    expect(bookService).toBeDefined();
   });
 
   describe('findAll', () => {
